@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Warna utama (sedikit lebih gelap biar kontras dengan background hitam) -->
+    <color name="colorPrimary">#90CAF9</color> <!-- Biru terang -->
+    <color name="colorPrimaryDark">#1976D2</color> <!-- Biru -->
+    <color name="colorAccent">#81C784</color> <!-- Hijau terang -->
+
+    <!-- Background & Surface -->
+    <color name="background">#121212</color> <!-- Abu sangat gelap -->
+    <color name="surface">#1E1E1E</color> <!-- Abu gelap -->
+
+    <!-- Teks -->
+    <color name="textPrimary">#FFFFFF</color>
+    <color name="textSecondary">#BDBDBD</color>
+
+    <!-- Status/Error -->
+    <color name="error">#CF6679</color>
+    <color name="warning">#FFB74D</color>
+    <color name="success">#81C784</color>
+
+    <!-- Neutral -->
+    <color name="black">#141414</color>
+    <color name="white">#FFFFFFFF</color>
+</resources>

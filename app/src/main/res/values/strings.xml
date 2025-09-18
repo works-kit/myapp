@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">myapp</string>
+    <string name="cari">Cari</string>
+    <string name="home">Home</string>
+    <string name="posts">Posts</string>
+    <string name="explores">Explores</string>
+    <string name="comments">Comments</string>
+    <string name="profile">Profile</string>
+    <string name="comments_fragment">Comments fragment</string>
+</resources>
