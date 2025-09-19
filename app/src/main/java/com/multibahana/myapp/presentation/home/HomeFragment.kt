@@ -11,9 +11,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.multibahana.myapp.R
 import com.multibahana.myapp.databinding.FragmentHomeBinding
+import com.multibahana.myapp.domain.model.AllProductsEntity
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -25,9 +34,15 @@ private const val ARG_PARAM2 = "param2"
  * Use the [HomeFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
-    private val binding get() = _binding
+    private val binding get() = _binding!!
+
+    private val viewModel: HomeViewModel by viewModels()
+
+    private lateinit var productsAdapter: ProductsAdapter
+
 
     // TODO: Rename and change types of parameters
     private var param1: String? = null
@@ -54,18 +69,75 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding?.root?.setOnTouchListener { v, event ->
+        productsAdapter = ProductsAdapter(
+            AllProductsEntity(
+                products = emptyList(),
+                limit = 0,
+                total = 0,
+                skip = 0
+            )
+        )
+
+        binding.recyclerView.apply {
+            adapter = productsAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+        }
+
+        viewModel.getProducts(
+            limit = 10,
+            skip = 10,
+            select = "title,price,stock,thumbnail",
+            sortBy = "title",
+            order = "asc"
+        )
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.productListState.collect { state ->
+                    when (state) {
+                        is AllProductsResult.Loading -> binding.progressBar.visibility =
+                            View.VISIBLE
+
+                        is AllProductsResult.Success -> {
+                            binding.progressBar.visibility = View.GONE
+                            productsAdapter.updateProducts(state.products)
+                        }
+
+                        is AllProductsResult.Error -> {
+                            binding.progressBar.visibility = View.GONE
+                            Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT)
+                                .show()
+                        }
+
+                        null -> Unit
+                    }
+                }
+            }
+        }
+
+        binding.root.setOnTouchListener { v, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {
-                binding?.searchBar?.clearFocus()
+                binding.searchBar.clearFocus()
                 val imm =
                     requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.hideSoftInputFromWindow(binding?.searchBar?.windowToken, 0)
+                imm.hideSoftInputFromWindow(binding.searchBar.windowToken, 0)
             }
             v.performClick()
             false
         }
 
-        binding?.searchBar?.apply {
+        binding.recyclerView.setOnTouchListener { v, event ->
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                binding.searchBar.clearFocus()
+                val imm =
+                    requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(binding.searchBar.windowToken, 0)
+            }
+            v.performClick()
+            false
+        }
+
+        binding.searchBar.apply {
             addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(
                     s: CharSequence?,
@@ -94,7 +166,7 @@ class HomeFragment : Fragment() {
                         event.rawX >= (editText.right - drawableEnd.bounds.width() - editText.paddingEnd)
                     ) {
                         if (!editText.text.isNullOrEmpty()) {
-                            editText.text?.clear()
+                            editText.text.clear()
                             return@setOnTouchListener true
                         }
                     }
@@ -103,25 +175,6 @@ class HomeFragment : Fragment() {
             }
         }
 
-//        requireActivity().onBackPressedDispatcher.addCallback(
-//            viewLifecycleOwner,
-//            object : OnBackPressedCallback(true) {
-//                override fun handleOnBackPressed() {
-//                    val editText = binding?.searchBar
-//                    if (editText != null && editText.hasFocus()) {
-//                        editText.clearFocus()
-//                        val imm =
-//                            requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-//                        imm.hideSoftInputFromWindow(binding?.searchBar?.windowToken, 0)
-//                    } else {
-//                        // 3️⃣ Kalau tidak fokus, back bekerja normal
-//                        isEnabled = false
-//                        requireActivity().onBackPressed()
-//                    }
-//                }
-//
-//            }
-//        )
     }
 
     override fun onDestroyView() {

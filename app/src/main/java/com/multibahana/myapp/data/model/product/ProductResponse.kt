@@ -1,8 +1,10 @@
 package com.multibahana.myapp.data.model.product
 
+import com.google.gson.annotations.SerializedName
+
 data class ProductResponse(
-    val products: List<ProductDto>,
-    val total : Int,
-    val skip : Int,
-    val limit : Int,
+    @SerializedName("products") val products: List<ProductDto>,
+    @SerializedName("total") val total : Int,
+    @SerializedName("skip") val skip : Int,
+    @SerializedName("limit") val limit : Int,
 )
