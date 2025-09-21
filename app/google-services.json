@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "5672812178",
+    "firebase_url": "https://mobileapp-99be9-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "mobileapp-99be9",
+    "storage_bucket": "mobileapp-99be9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:5672812178:android:480ebb1e17769a0c53304b",
+        "android_client_info": {
+          "package_name": "com.multibahana.myapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYcNiBWGFL6thszTGWsifPN7GW-8pS2n8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -25,24 +25,24 @@ class GetAllProductsUseCase @Inject constructor(
                 response.isSuccessful -> {
                     response.body()?.let { body ->
                         AllProductsResult.Success(body.toEntity())
-                    } ?: AllProductsResult.Error(ErrorType.Unknown, "Response body is null : ${response.errorBody().toString()}")
+                    } ?: AllProductsResult.Error(ErrorType.Unknown, "Response body is null : ${response.errorBody()}")
                 }
 
                 response.code() in 400..499 -> {
                     AllProductsResult.Error(
                         ErrorType.Client,
-                        "Invalid client input  ${response.errorBody().toString()}"
+                        "Invalid client input  ${response.errorBody()}"
                     )
                 }
 
                 response.code() in 500..599 -> {
-                    AllProductsResult.Error(ErrorType.Server, "Server error ${response.errorBody().toString()}")
+                    AllProductsResult.Error(ErrorType.Server, "Server error ${response.errorBody()}")
                 }
 
                 else -> {
                     AllProductsResult.Error(
                         ErrorType.Unknown,
-                        "Unexpected error ${response.errorBody().toString()}"
+                        "Unexpected error ${response.errorBody()}"
                     )
                 }
             }

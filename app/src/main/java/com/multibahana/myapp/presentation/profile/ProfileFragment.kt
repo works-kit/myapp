@@ -2,6 +2,7 @@ package com.multibahana.myapp.presentation.profile
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,10 +12,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.bumptech.glide.Glide
+import com.google.gson.Gson
 import com.multibahana.myapp.R
 import com.multibahana.myapp.databinding.FragmentProfileBinding
 import com.multibahana.myapp.presentation.login.LoginActivity
-import com.multibahana.myapp.presentation.profile.state.ProfileResult
+import com.multibahana.myapp.utils.ResultState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -22,7 +24,8 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
-    private val viewModel: ProfileViewModel by activityViewModels()
+    //    private val viewModel: ProfileViewModel by activityViewModels()
+    private val viewModel: CurrentUserFirebaseViewModel by activityViewModels()
 
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding
@@ -45,21 +48,15 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.currentUserFirebase()
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
 
                 launch {
-                    viewModel.accessToken.collectLatest { token ->
-                        if (token != null && viewModel.profileState.value !is ProfileResult.Success) {
-                            viewModel.getMe(token)
-                        }
-                    }
-                }
-
-                launch {
                     viewModel.profileState.collectLatest { state ->
                         when (state) {
-                            is ProfileResult.Loading -> {
+                            is ResultState.Loading -> {
                                 binding?.apply {
                                     imageViewProfile.setImageResource(R.drawable.ic_launcher_foreground)
                                     textViewName.text = "Loading.."
@@ -67,25 +64,26 @@ class ProfileFragment : Fragment() {
                                 }
                             }
 
-                            is ProfileResult.Success -> {
+                            is ResultState.Success -> {
                                 binding?.apply {
                                     Glide.with(this@ProfileFragment)
-                                        .load(state.user.profileImage)
+                                        .load(state.data?.photoUrl)
                                         .placeholder(R.drawable.ic_launcher_foreground)
                                         .into(imageViewProfile)
 
-                                    textViewName.text = state.user.username
-                                    textViewEmail.text = state.user.email
+                                    textViewName.text = state.data?.displayName
+                                    textViewEmail.text = state.data?.email
                                 }
                             }
 
-                            is ProfileResult.Error -> {
+                            is ResultState.Error -> {
                                 binding?.textError?.text = state.errorType.toString()
                             }
 
-                            is ProfileResult.LoggedOut -> {
+                            is ResultState.LoggedOut -> {
                                 startActivity(Intent(context, LoginActivity::class.java).apply {
-                                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                    flags =
+                                        Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                                 })
                             }
 
@@ -96,7 +94,7 @@ class ProfileFragment : Fragment() {
             }
         }
 
-        binding?.buttonLogout?.setOnClickListener { viewModel.logout() }
+        binding?.buttonLogout?.setOnClickListener { viewModel.logoutWithFireBase() }
     }
 
 

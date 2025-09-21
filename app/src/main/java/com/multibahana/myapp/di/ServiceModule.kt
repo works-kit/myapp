@@ -1,5 +1,6 @@
 package com.multibahana.myapp.di
 
+import com.google.firebase.auth.FirebaseAuth
 import com.multibahana.myapp.data.remote.api.AuthService
 import com.multibahana.myapp.data.remote.api.ProductService
 import dagger.Module
@@ -22,4 +23,9 @@ object ServiceModule {
     @Singleton
     fun provideProductService(retrofit: Retrofit): ProductService =
         retrofit.create(ProductService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
+
 }

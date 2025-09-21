@@ -11,13 +11,15 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.multibahana.myapp.databinding.ActivitySplashScreenBinding
 import com.multibahana.myapp.presentation.login.LoginActivity
-import com.multibahana.myapp.presentation.login.LoginViewModel
+import com.multibahana.myapp.presentation.login.LoginFirebaseViewModel
+import com.multibahana.myapp.presentation.profile.CurrentUserFirebaseViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SplashScreen : AppCompatActivity() {
-    private val viewModel: LoginViewModel by viewModels()
+    //    private val viewModel: LoginViewModel by viewModels()
+    private val viewModel: LoginFirebaseViewModel by viewModels()
     private val binding by lazy { ActivitySplashScreenBinding.inflate(layoutInflater) }
 
     override fun onCreate(savedInstanceState: Bundle?) {

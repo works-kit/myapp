@@ -1,9 +1,12 @@
 package com.multibahana.myapp.di
 
+import com.google.firebase.auth.FirebaseAuth
 import com.multibahana.myapp.data.remote.api.AuthService
 import com.multibahana.myapp.data.remote.api.ProductService
+import com.multibahana.myapp.data.repository.AuthFirebaseRepositoryImpl
 import com.multibahana.myapp.data.repository.AuthRepositoryImpl
 import com.multibahana.myapp.data.repository.ProductRepositoryImpl
+import com.multibahana.myapp.domain.repository.AuthFirebaseRepository
 import com.multibahana.myapp.domain.repository.AuthRepository
 import com.multibahana.myapp.domain.repository.ProductRepository
 import dagger.Module
@@ -26,4 +29,9 @@ object RepositoryModule {
         productService: ProductService
     ): ProductRepository =
         ProductRepositoryImpl(productService)
+
+    @Provides
+    @Singleton
+    fun provideAuthFirebaseRepository(authFirebase: FirebaseAuth): AuthFirebaseRepository =
+        AuthFirebaseRepositoryImpl(authFirebase)
 }

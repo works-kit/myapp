@@ -21,28 +21,28 @@ class GetProductByIdUseCase @Inject constructor(
                         ProductResult.Success(body.toEntity())
                     } ?: ProductResult.Error(
                         ErrorType.Server,
-                        "Response body is null ${response.errorBody().toString()}"
+                        "Response body is null ${response.errorBody()}"
                     )
                 }
 
                 response.code() in 400..499 -> {
                     ProductResult.Error(
                         ErrorType.Client,
-                        "Invalid client input  ${response.errorBody().toString()}"
+                        "Invalid client input  ${response.errorBody()}"
                     )
                 }
 
                 response.code() in 500..599 -> {
                     ProductResult.Error(
                         ErrorType.Server,
-                        "Server error ${response.errorBody().toString()}"
+                        "Server error ${response.errorBody()}"
                     )
                 }
 
                 else -> {
                     ProductResult.Error(
                         ErrorType.Unknown,
-                        "Unexpected error ${response.errorBody().toString()}"
+                        "Unexpected error ${response.errorBody()}"
                     )
                 }
             }

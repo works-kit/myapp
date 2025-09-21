@@ -4,6 +4,8 @@ plugins {
 
     id("com.google.dagger.hilt.android")
     id("com.google.devtools.ksp")
+
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -53,9 +55,15 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
+    //Testing lib
     testImplementation("io.mockk:mockk:1.13.11")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0")
 
+    //firebase
+    implementation(platform("com.google.firebase:firebase-bom:34.3.0"))
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-firestore")
 
     //Data store
     implementation ("androidx.datastore:datastore-preferences:1.1.7")
@@ -68,6 +76,11 @@ dependencies {
     //Lifecycle viewmodel
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.2")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.9.2")
+
+    //ktx
+    implementation ("androidx.fragment:fragment-ktx:1.8.9")
+    implementation ("androidx.activity:activity-ktx:1.10.1")
+
 
     //Retrofit
     implementation("com.squareup.retrofit2:retrofit:3.0.0")
@@ -87,9 +100,6 @@ dependencies {
     //Glide
     implementation ("com.github.bumptech.glide:glide:4.16.0")
 
-    //ktx
-    implementation ("androidx.fragment:fragment-ktx:1.8.9")
-    implementation ("androidx.activity:activity-ktx:1.10.1")
 
     //navigation-fragment
     val nav_version = "2.9.3" // versi terbaru stabil per Agustus 2025

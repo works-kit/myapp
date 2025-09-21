@@ -1,8 +1,6 @@
-package com.multibahana.myapp.presentation.login
+package com.multibahana.myapp.presentation.register
 
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -12,29 +10,23 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.google.gson.Gson
 import com.multibahana.myapp.R
-import com.multibahana.myapp.databinding.ActivityLoginBinding
-import com.multibahana.myapp.presentation.MainActivity
-import com.multibahana.myapp.presentation.login.state.LoginResult
-import com.multibahana.myapp.presentation.register.RegisterActivity
+import com.multibahana.myapp.databinding.ActivityRegisterBinding
 import com.multibahana.myapp.utils.ResultState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class LoginActivity : AppCompatActivity() {
-//    private val viewModel: LoginViewModel by viewModels()
-    private val viewModel: LoginFirebaseViewModel by viewModels()
-
-    private lateinit var binding: ActivityLoginBinding
+class RegisterActivity : AppCompatActivity() {
+    private val viewModel: RegisterFirebaseViewModel by viewModels()
+    private lateinit var binding: ActivityRegisterBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        binding = ActivityLoginBinding.inflate(layoutInflater)
+        binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -45,27 +37,27 @@ class LoginActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.loginState.collectLatest { state ->
+                viewModel.state.collectLatest { state ->
                     when (state) {
                         is ResultState.Loading -> {
-                            binding.buttonLogin.text = "Loading.."
-                            binding.buttonLogin.isEnabled = false
+                            binding.buttonSubmit.text = "Loading.."
+                            binding.buttonSubmit.isEnabled = false
                             binding.textError.visibility = View.GONE
                         }
 
                         is ResultState.Success -> {
-                            binding.buttonLogin.text = "Login"
-                            binding.buttonLogin.isEnabled = true
+                            binding.buttonSubmit.text = "Register"
+                            binding.buttonSubmit.isEnabled = true
                             binding.textError.visibility = View.GONE
-                            startActivity(Intent(this@LoginActivity, MainActivity::class.java).apply {
-                                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                            })
-                            viewModel.clearLoginFirebaseState()
+                            binding.textSucces.visibility = View.VISIBLE
+                            binding.textSucces.text = "Register berhasil."
+                            viewModel.clearRegisterFirebaseState()
                         }
 
                         is ResultState.Error -> {
-                            binding.buttonLogin.text = "Login"
-                            binding.buttonLogin.isEnabled = true
+                            binding.buttonSubmit.text = "Register"
+                            binding.buttonSubmit.isEnabled = true
+                            binding.textSucces.visibility = View.GONE
                             binding.textError.apply {
                                 visibility = View.VISIBLE
                                 text = state.message
@@ -79,15 +71,11 @@ class LoginActivity : AppCompatActivity() {
         }
 
 
-        binding.buttonLogin.setOnClickListener {
-            val email = binding.editTextUsername.text.toString()
+        binding.buttonSubmit.setOnClickListener {
+            val email = binding.editTextEmail.text.toString()
             val password = binding.editTextPassword.text.toString()
 
-            viewModel.loginWithFirebase(email, password)
-        }
-
-        binding.buttonRegister.setOnClickListener {
-            startActivity(Intent(this, RegisterActivity::class.java))
+            viewModel.registerWithFirebase(email, password)
         }
     }
 }
