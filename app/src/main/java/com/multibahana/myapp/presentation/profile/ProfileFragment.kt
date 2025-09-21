@@ -2,7 +2,6 @@ package com.multibahana.myapp.presentation.profile
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +11,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.bumptech.glide.Glide
-import com.google.gson.Gson
 import com.multibahana.myapp.R
 import com.multibahana.myapp.databinding.FragmentProfileBinding
 import com.multibahana.myapp.presentation.login.LoginActivity

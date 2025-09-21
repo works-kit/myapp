@@ -12,7 +12,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.multibahana.myapp.databinding.ActivitySplashScreenBinding
 import com.multibahana.myapp.presentation.login.LoginActivity
 import com.multibahana.myapp.presentation.login.LoginFirebaseViewModel
-import com.multibahana.myapp.presentation.profile.CurrentUserFirebaseViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 

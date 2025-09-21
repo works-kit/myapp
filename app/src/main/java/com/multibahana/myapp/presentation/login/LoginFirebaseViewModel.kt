@@ -6,7 +6,6 @@ import com.google.firebase.auth.FirebaseUser
 import com.multibahana.myapp.domain.usecase.authfirebase.CurrentUserWithFirebaseUseCase
 import com.multibahana.myapp.domain.usecase.authfirebase.LoginWithFirebaseUseCase
 import com.multibahana.myapp.presentation.SplashState
-import com.multibahana.myapp.presentation.profile.state.ProfileResult
 import com.multibahana.myapp.utils.ResultState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject

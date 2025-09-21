@@ -3,18 +3,13 @@ package com.multibahana.myapp.presentation.profile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseUser
-import com.multibahana.myapp.data.local.prefs.DataStoreManager
-import com.multibahana.myapp.domain.usecase.GetMeUseCase
 import com.multibahana.myapp.domain.usecase.authfirebase.CurrentUserWithFirebaseUseCase
 import com.multibahana.myapp.domain.usecase.authfirebase.LogoutWithFirebaseUseCase
-import com.multibahana.myapp.presentation.profile.state.ProfileResult
 import com.multibahana.myapp.utils.ResultState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 @HiltViewModel

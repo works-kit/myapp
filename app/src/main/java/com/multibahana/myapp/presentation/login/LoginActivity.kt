@@ -2,7 +2,6 @@ package com.multibahana.myapp.presentation.login
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -12,11 +11,9 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.google.gson.Gson
 import com.multibahana.myapp.R
 import com.multibahana.myapp.databinding.ActivityLoginBinding
 import com.multibahana.myapp.presentation.MainActivity
-import com.multibahana.myapp.presentation.login.state.LoginResult
 import com.multibahana.myapp.presentation.register.RegisterActivity
 import com.multibahana.myapp.utils.ResultState
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,7 +22,7 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
-//    private val viewModel: LoginViewModel by viewModels()
+    //    private val viewModel: LoginViewModel by viewModels()
     private val viewModel: LoginFirebaseViewModel by viewModels()
 
     private lateinit var binding: ActivityLoginBinding
@@ -57,9 +54,14 @@ class LoginActivity : AppCompatActivity() {
                             binding.buttonLogin.text = "Login"
                             binding.buttonLogin.isEnabled = true
                             binding.textError.visibility = View.GONE
-                            startActivity(Intent(this@LoginActivity, MainActivity::class.java).apply {
-                                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                            })
+                            startActivity(
+                                Intent(
+                                    this@LoginActivity,
+                                    MainActivity::class.java
+                                ).apply {
+                                    flags =
+                                        Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                })
                             viewModel.clearLoginFirebaseState()
                         }
 
