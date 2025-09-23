@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.multibahana.myapp.data.model.posts.PostDto
-import com.multibahana.myapp.domain.model.AllProductsEntity
 import com.multibahana.myapp.domain.model.PostEntity
 import com.multibahana.myapp.domain.usecase.posts.AddPostUseCase
 import com.multibahana.myapp.domain.usecase.posts.DeletePostUseCase
@@ -55,37 +54,37 @@ class PostsViewModel @Inject constructor(
         _listPostsState.value = ResultState.Loading
 
         viewModelScope.launch {
-            getAllPostsUseCase(currentUserId){
+            getAllPostsUseCase(currentUserId) {
                 _listPostsState.value = it
             }
         }
 
     }
 
-    fun getAllPostsNewest(){
+    fun getAllPostsNewest() {
         val currentUserId = firebaseAuth.currentUser?.uid ?: return
 
         _listPostsState.value = ResultState.Loading
 
         viewModelScope.launch {
-            getAllPostsUseCase(currentUserId){
+            getAllPostsUseCase(currentUserId) {
                 _listPostsState.value = it
             }
         }
     }
 
-    fun deletePost(postId : String){
+    fun deletePost(postId: String) {
         val currentUserId = firebaseAuth.currentUser?.uid ?: return
 
         viewModelScope.launch {
-            deletePostUseCase(currentUserId, postId){
+            deletePostUseCase(currentUserId, postId) {
 
             }
         }
 
     }
 
-    fun clearPosts(){
+    fun clearPosts() {
         _postState.value = null
     }
 }

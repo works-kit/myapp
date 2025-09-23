@@ -19,11 +19,3 @@ fun PostDto.toEntity(): PostEntity {
         userId = userId
     )
 }
-fun DocumentSnapshot.toPostEntity(): PostEntity{
-    return PostEntity(
-        id = this.id,
-        title = getString("title")?:"",
-        content = getString("content")?:"",
-        userId = getString("userId") ?:""
-    )
-}
