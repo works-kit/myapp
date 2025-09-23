@@ -1,6 +1,7 @@
 package com.multibahana.myapp.di
 
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.multibahana.myapp.data.remote.api.AuthService
 import com.multibahana.myapp.data.remote.api.ProductService
 import dagger.Module
@@ -27,5 +28,9 @@ object ServiceModule {
     @Provides
     @Singleton
     fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
+
+    @Provides
+    @Singleton
+    fun provideFirebaseFirestore(): FirebaseFirestore = FirebaseFirestore.getInstance()
 
 }

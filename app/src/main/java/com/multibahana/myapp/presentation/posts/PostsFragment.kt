@@ -1,32 +1,46 @@
 package com.multibahana.myapp.presentation.posts
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.multibahana.myapp.R
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.multibahana.myapp.databinding.FragmentPostsBinding
+import com.multibahana.myapp.utils.ResultState
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [PostsFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
+@AndroidEntryPoint
 class PostsFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private val viewModel: PostsViewModel by viewModels()
+
+    private var _binding: FragmentPostsBinding? = null
+    private val binding get() = _binding!!
+
+    private lateinit var postAdapter: PostAdapter
+
+//    private val addPostLauncher = registerForActivityResult(
+//        ActivityResultContracts.StartActivityForResult()
+//    ) { result ->
+//        if (result.resultCode == Activity.RESULT_OK) {
+//            viewModel.getAllPosts()
+//        }
+//    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+
         }
     }
 
@@ -34,26 +48,88 @@ class PostsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_posts, container, false)
+        _binding = FragmentPostsBinding.inflate(layoutInflater)
+        return _binding?.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        postAdapter = PostAdapter(
+            emptyList(),
+            onDeletePost = {
+                AlertDialog.Builder(requireContext())
+                    .setTitle("Hapus Post")
+                    .setMessage("Yakin mau hapus post ${it.id} ?")
+                    .setPositiveButton("Ya") { _, _ ->
+                        viewModel.deletePost(it.id)
+                        viewModel.getAllPostsNewest()
+
+                    }
+                    .setNegativeButton("Batal", null)
+                    .show()
+            },
+            onEditPost = { post ->
+                val intent = Intent(context, CommandPostActivity::class.java)
+                startActivity(intent)
+            })
+
+        binding.rvPosts.apply {
+            adapter = postAdapter
+            layoutManager = LinearLayoutManager(context)
+        }
+
+        binding.swipeRefresh.setOnRefreshListener {
+            viewModel.getAllPostsNewest()
+        }
+
+        viewModel.getAllPosts()
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.listPostsState.collectLatest { state ->
+                    when (state) {
+                        is ResultState.Loading -> {
+                            binding.swipeRefresh.isRefreshing = true
+                        }
+
+                        is ResultState.Success -> {
+                            binding.swipeRefresh.isRefreshing = false
+                            postAdapter.updatePosts(state.data)
+
+                        }
+
+                        is ResultState.Error -> {
+                            binding.swipeRefresh.isRefreshing = false
+                            Toast.makeText(context, state.message, Toast.LENGTH_SHORT)
+                                .show()
+                        }
+
+                        else -> Unit
+                    }
+                }
+            }
+        }
+
+        binding.fabAddPost.setOnClickListener {
+            val intent = Intent(context, CommandPostActivity::class.java)
+            startActivity(intent)
+//            addPostLauncher.launch(intent)
+        }
+    }
+
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment PostsFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             PostsFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+
                 }
             }
     }

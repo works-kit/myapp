@@ -26,7 +26,7 @@ class ProfileFragment : Fragment() {
     private val viewModel: CurrentUserFirebaseViewModel by activityViewModels()
 
     private var _binding: FragmentProfileBinding? = null
-    private val binding get() = _binding
+    private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,15 +55,14 @@ class ProfileFragment : Fragment() {
                     viewModel.profileState.collectLatest { state ->
                         when (state) {
                             is ResultState.Loading -> {
-                                binding?.apply {
-                                    imageViewProfile.setImageResource(R.drawable.ic_launcher_foreground)
-                                    textViewName.text = "Loading.."
-                                    textViewEmail.text = "Loading.."
+                                binding.apply {
+                                    progressBar.visibility = View.VISIBLE
                                 }
                             }
 
                             is ResultState.Success -> {
-                                binding?.apply {
+                                binding.apply {
+                                    progressBar.visibility = View.GONE
                                     Glide.with(this@ProfileFragment)
                                         .load(state.data?.photoUrl)
                                         .placeholder(R.drawable.ic_launcher_foreground)
@@ -75,7 +74,8 @@ class ProfileFragment : Fragment() {
                             }
 
                             is ResultState.Error -> {
-                                binding?.textError?.text = state.errorType.toString()
+                                binding.progressBar.visibility = View.GONE
+                                binding.textError.text = state.errorType.toString()
                             }
 
                             is ResultState.LoggedOut -> {
@@ -92,7 +92,7 @@ class ProfileFragment : Fragment() {
             }
         }
 
-        binding?.buttonLogout?.setOnClickListener { viewModel.logoutWithFireBase() }
+        binding.buttonLogout.setOnClickListener { viewModel.logoutWithFireBase() }
     }
 
 

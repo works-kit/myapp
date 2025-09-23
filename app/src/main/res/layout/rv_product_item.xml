@@ -7,7 +7,7 @@
     android:gravity="center_vertical">
 
     <!-- Thumbnail -->
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/ivThumbnail"
         android:layout_width="60dp"
         android:layout_height="60dp"
@@ -17,13 +17,13 @@
         android:background="?attr/selectableItemBackgroundBorderless" />
 
     <!-- Info Vertikal -->
-    <LinearLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:orientation="vertical"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1">
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvTitle"
             android:textStyle="bold"
             android:textSize="16sp"
@@ -32,19 +32,19 @@
             android:maxLines="2"
             android:ellipsize="end"/>
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvPrice"
             android:textSize="14sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@android:color/holo_green_dark"/>
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvStock"
             android:textSize="12sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@android:color/darker_gray"/>
 
-    </LinearLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
 </LinearLayout>

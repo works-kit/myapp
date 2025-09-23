@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="12dp"
+    android:gravity="center_vertical">
+
+    <!-- Judul Post -->
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/postTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Post Title"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="@color/textPrimary"
+        android:ellipsize="end"
+        android:singleLine="true" />
+
+    <!-- Tombol Edit -->
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/editPost"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@android:drawable/ic_menu_edit"
+        android:contentDescription="Edit post"
+        app:tint="@color/colorPrimary" />
+
+    <!-- Tombol Delete -->
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/deletePost"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@android:drawable/ic_menu_delete"
+        android:contentDescription="Delete post"
+        app:tint="@android:color/holo_red_dark" />
+</LinearLayout>

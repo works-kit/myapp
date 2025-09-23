@@ -106,6 +106,9 @@ dependencies {
     implementation ("androidx.navigation:navigation-fragment-ktx:$nav_version")
     implementation ("androidx.navigation:navigation-ui-ktx:$nav_version")
 
+    //Pull refresh
+    implementation ("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+
     ksp("org.jetbrains.kotlinx:kotlinx-metadata-jvm:0.9.0")
     testImplementation(kotlin("test"))
 }
