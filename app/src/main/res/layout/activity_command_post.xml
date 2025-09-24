@@ -48,7 +48,19 @@
             android:layout_height="wrap_content"
             android:background="@drawable/search_bg"
             android:layout_marginTop="24dp"
+            android:visibility="visible"
+            android:textAllCaps="false"
             android:text="Simpan Post" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnUpdatePost"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/search_bg"
+            android:layout_marginTop="24dp"
+            android:visibility="visible"
+            android:textAllCaps="false"
+            android:text="Update Post" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -19,7 +19,7 @@ class PostsRepositoryImpl @Inject constructor(
             .collection("posts")
             .document()
 
-        return docRef.set(postDto.copy(userId = userId))
+        return docRef.set(postDto.copy(userId = userId, id = docRef.id))
             .continueWith { task ->
                 if (task.isSuccessful) null else throw task.exception ?: Exception("Gagal menambahkan post")
             }

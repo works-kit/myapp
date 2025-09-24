@@ -1,11 +1,13 @@
 package com.multibahana.myapp.presentation.posts
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -28,13 +30,13 @@ class PostsFragment : Fragment() {
 
     private lateinit var postAdapter: PostAdapter
 
-//    private val addPostLauncher = registerForActivityResult(
-//        ActivityResultContracts.StartActivityForResult()
-//    ) { result ->
-//        if (result.resultCode == Activity.RESULT_OK) {
-//            viewModel.getAllPosts()
-//        }
-//    }
+    private val updatePostLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            viewModel.getAllPostsNewest()
+        }
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,7 +62,7 @@ class PostsFragment : Fragment() {
             onDeletePost = {
                 AlertDialog.Builder(requireContext())
                     .setTitle("Hapus Post")
-                    .setMessage("Yakin mau hapus post ${it.id} ?")
+                    .setMessage("Yakin mau hapus post ${it.title} ?")
                     .setPositiveButton("Ya") { _, _ ->
                         viewModel.deletePost(it.id)
                         viewModel.getAllPostsNewest()
@@ -71,7 +73,8 @@ class PostsFragment : Fragment() {
             },
             onEditPost = { post ->
                 val intent = Intent(context, CommandPostActivity::class.java)
-                startActivity(intent)
+                intent.putExtra("postId", post.id)
+                updatePostLauncher.launch(intent)
             })
 
         binding.rvPosts.apply {
@@ -114,7 +117,6 @@ class PostsFragment : Fragment() {
         binding.fabAddPost.setOnClickListener {
             val intent = Intent(context, CommandPostActivity::class.java)
             startActivity(intent)
-//            addPostLauncher.launch(intent)
         }
     }
 

@@ -1,6 +1,5 @@
 package com.multibahana.myapp.domain.model
 
-import com.google.firebase.firestore.DocumentSnapshot
 import com.multibahana.myapp.data.model.posts.PostDto
 
 data class PostEntity(
@@ -13,6 +12,7 @@ data class PostEntity(
 
 fun PostDto.toEntity(): PostEntity {
     return PostEntity(
+        id = id,
         title = title,
         content = content,
         createdAt = createdAt,

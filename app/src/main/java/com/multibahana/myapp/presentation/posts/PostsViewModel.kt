@@ -8,6 +8,8 @@ import com.multibahana.myapp.domain.model.PostEntity
 import com.multibahana.myapp.domain.usecase.posts.AddPostUseCase
 import com.multibahana.myapp.domain.usecase.posts.DeletePostUseCase
 import com.multibahana.myapp.domain.usecase.posts.GetAllPostsUseCase
+import com.multibahana.myapp.domain.usecase.posts.GetPostByIdUseCase
+import com.multibahana.myapp.domain.usecase.posts.UpdatePostUseCase
 import com.multibahana.myapp.utils.ResultState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
@@ -18,6 +20,8 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class PostsViewModel @Inject constructor(
     private val addPostUseCase: AddPostUseCase,
+    private val updatePostUseCase: UpdatePostUseCase,
+    private val getPostByIdUseCase: GetPostByIdUseCase,
     private val getAllPostsUseCase: GetAllPostsUseCase,
     private val deletePostUseCase: DeletePostUseCase,
     private val firebaseAuth: FirebaseAuth
@@ -28,6 +32,13 @@ class PostsViewModel @Inject constructor(
 
     private val _postState = MutableStateFlow<ResultState<Void?>?>(null)
     val addPostState: StateFlow<ResultState<Void?>?> = _postState
+
+    private val _detailPostState = MutableStateFlow<ResultState<PostEntity?>?>(null)
+    val detailPostState: StateFlow<ResultState<PostEntity?>?> = _detailPostState
+
+    private val _updatePostState = MutableStateFlow<ResultState<Void?>?>(null)
+    val updatePostState: StateFlow<ResultState<Void?>?> = _updatePostState
+
 
     fun addPost(post: PostEntity) {
         val currentUserId = firebaseAuth.currentUser?.uid ?: return
@@ -77,11 +88,42 @@ class PostsViewModel @Inject constructor(
         val currentUserId = firebaseAuth.currentUser?.uid ?: return
 
         viewModelScope.launch {
-            deletePostUseCase(currentUserId, postId) {
+            deletePostUseCase(currentUserId, postId) {}
+        }
 
+    }
+
+    fun updatePost(post: PostEntity){
+        val currentUserId = firebaseAuth.currentUser?.uid ?: return
+
+        val postDto = PostDto(
+            id = post.id,
+            title = post.title,
+            content = post.content,
+            userId = currentUserId,
+            createdAt = System.currentTimeMillis()
+        )
+
+        _updatePostState.value = ResultState.Loading
+
+        viewModelScope.launch {
+            updatePostUseCase(currentUserId, post.id, postDto){
+                _updatePostState.value = it
             }
         }
 
+    }
+
+    fun getPostById(postId:String){
+        val currentUserId = firebaseAuth.currentUser?.uid ?: return
+
+        _detailPostState.value = ResultState.Loading
+
+        viewModelScope.launch {
+            getPostByIdUseCase(currentUserId, postId){
+                _detailPostState.value = it
+            }
+        }
     }
 
     fun clearPosts() {
